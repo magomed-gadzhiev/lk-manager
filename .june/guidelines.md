@@ -9,7 +9,7 @@
 - PHP 8.3
 - Laravel 11
 - MySQL
-- Vue.js
+- Vue.js (vue-tsc)
 
 
 Цель:

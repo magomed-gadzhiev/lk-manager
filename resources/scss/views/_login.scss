@@ -1,0 +1,47 @@
+.login-page {
+  // Background for the full-page container
+  background-color: var(--page-bg);
+
+  // Former scoped styles, now limited to login page only
+  .form-control {
+    border-color: #e9edf2;
+    background-color: #fff;
+  }
+
+  .form-control:focus {
+    box-shadow: none;
+    border-color: #d9dee5;
+  }
+
+  .btn:hover {
+    background-color: var(--btn-bg-hover) !important;
+  }
+
+  .card {
+    border: 1px solid #eef1f5;
+  }
+
+  // Moved from inline :style bindings
+  .login-card {
+    border-radius: 10px;
+    min-width: 360px;
+    max-width: 420px;
+  }
+
+  .login-title {
+    color: #293042;
+    font-size: 22px;
+  }
+
+  .login-btn {
+    background-color: var(--btn-bg);
+    color: #fff;
+    border-radius: 6px;
+  }
+
+  @media (max-width: 420px) {
+    .card-body {
+      padding: 1.25rem !important;
+    }
+  }
+}

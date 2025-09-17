@@ -1,0 +1,14 @@
+:root {
+  --page-bg: #f4f6f8;
+  --card-radius: 10px;
+  --btn-bg: #2b3240;
+  --btn-bg-hover: #232a37;
+}
+
+html, body, #app {
+  height: 100%;
+}
+
+body {
+  background: var(--page-bg);
+}

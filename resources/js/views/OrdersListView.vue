@@ -113,18 +113,19 @@
             </div>
         </div>
     </div>
-    <!-- Временный простой модал-алерт для статистики -->
+    <!-- Модальное окно статистики -->
     <div v-if="statsOpen"
-         class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex align-items-center justify-content-center">
-        <div class="bg-white rounded shadow p-4" style="min-width: 280px;">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <div class="fw-bold">Статистика</div>
-                <button class="btn btn-sm btn-outline-secondary" @click="statsOpen=false">Закрыть</button>
-            </div>
-            <ul class="list-unstyled mb-0">
-                <li>Новые: {{ stats.new }}</li>
+         class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex align-items-center justify-content-center"
+         @click.self="statsOpen=false">
+        <div class="bg-white rounded shadow p-4 position-relative" style="min-width: 360px; max-width: 420px;">
+            <button type="button" class="btn-close position-absolute top-0 end-0 m-3" aria-label="Close"
+                    @click="statsOpen=false"></button>
+            <div class="fw-bold mb-3">Статистика заказов</div>
+            <ul class="mb-0 ps-3">
+                <li>Всего заказов (с учётом фильтров): {{ stats.total }}</li>
+                <li>Новых заказов: {{ stats.new }}</li>
                 <li>В работе: {{ stats.in_progress }}</li>
-                <li>Завершённые: {{ stats.done }}</li>
+                <li>Завершено: {{ stats.done }}</li>
             </ul>
         </div>
     </div>
@@ -177,7 +178,7 @@ const filters = reactive({
 });
 const loading = ref(false);
 const statsOpen = ref(false);
-const stats = reactive({new: 0, in_progress: 0, done: 0});
+const stats = reactive({total: 0, new: 0, in_progress: 0, done: 0});
 // Модальные окна выбора дат
 const fromModalOpen = ref(false);
 const toModalOpen = ref(false);
@@ -304,6 +305,7 @@ const buildParams = () => {
 };
 
 const computeStats = (list) => {
+    stats.total = Array.isArray(list) ? list.length : 0;
     stats.new = list.filter(o => o.status === 'new').length;
     stats.in_progress = list.filter(o => o.status === 'in_progress').length;
     stats.done = list.filter(o => o.status === 'done').length;

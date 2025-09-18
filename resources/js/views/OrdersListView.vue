@@ -4,59 +4,69 @@
             <div class="card-body">
                 <h1 class="orders-title">Таблица заказов</h1>
                 <form class="orders-filters row g-2 align-items-end" @submit.prevent="loadOrders">
-                    <div class="col">
-                        <label class="form-label small text-muted">Поиск</label>
-                        <input v-model.trim="filters.search" type="text" class="form-control form-control-sm"
-                               placeholder="ФИО, компания, телефон, товар"/>
-                    </div>
-                    <div class="col-auto">
-                        <label class="form-label small text-muted">С даты</label>
-                        <div class="input-icon">
-                            <input
-                                :value="formatDate(filters.dateFrom)"
-                                type="text"
-                                class="form-control form-control-sm"
-                                placeholder="дд.мм.гггг"
-                                readonly
-                                @click="openFromModal"
-                            />
-                            <span class="calendar-icon"></span>
+                    <div class="col-8">
+                        <div class="row">
+                            <div class="col-auto">
+                                <label class="form-label small text-muted">Поиск</label>
+                                <input v-model.trim="filters.search" type="text" class="form-control form-control-sm"
+                                       placeholder="ФИО, компания, телефон, товар"/>
+                            </div>
+                            <div class="col">
+                                <label class="form-label small text-muted">С даты</label>
+                                <div class="input-icon">
+                                    <input
+                                        :value="formatDate(filters.dateFrom)"
+                                        type="text"
+                                        class="form-control form-control-sm"
+                                        placeholder="дд.мм.гггг"
+                                        readonly
+                                        @click="openFromModal"
+                                    />
+                                    <span class="calendar-icon"></span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label class="form-label small text-muted">По дату</label>
+                                <div class="input-icon">
+                                    <input
+                                        :value="formatDate(filters.dateTo)"
+                                        type="text"
+                                        class="form-control form-control-sm"
+                                        placeholder="дд.мм.гггг"
+                                        readonly
+                                        @click="openToModal"
+                                    />
+                                    <span class="calendar-icon"></span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label class="form-label small text-muted">Статус</label>
+                                <select v-model="filters.status" class="form-select form-select-sm">
+                                    <option value="">Все</option>
+                                    <option value="new">Новые</option>
+                                    <option value="in_progress">В работе</option>
+                                    <option value="done">Завершённые</option>
+                                </select>
+                            </div>
+                            <div class="col d-flex align-items-end">
+                                <button type="submit" class="btn btn-outline-secondary btn-sm">Применить</button>
+                            </div>
+                            <div class="col d-flex align-items-end">
+                                <button type="button" class="btn btn-link btn-sm text-muted p-0 mb-1" @click="resetFilters">Сброс</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-auto">
-                        <label class="form-label small text-muted">По дату</label>
-                        <div class="input-icon">
-                            <input
-                                :value="formatDate(filters.dateTo)"
-                                type="text"
-                                class="form-control form-control-sm"
-                                placeholder="дд.мм.гггг"
-                                readonly
-                                @click="openToModal"
-                            />
-                            <span class="calendar-icon"></span>
+                    <div class="col-4">
+                        <div class="row align-items-end">
+                            <div class="col-auto ms-auto">
+                                <label class="form-label invisible">stats</label>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" @click="openStats">Статистика</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-auto">
-                        <label class="form-label small text-muted">Статус</label>
-                        <select v-model="filters.status" class="form-select form-select-sm">
-                            <option value="">Все</option>
-                            <option value="new">Новые</option>
-                            <option value="in_progress">В работе</option>
-                            <option value="done">Завершённые</option>
-                        </select>
-                    </div>
-                    <div class="col-auto">
-                        <label class="form-label invisible">apply</label>
-                        <button type="submit" class="btn btn-outline-secondary btn-sm">Применить</button>
-                    </div>
-                    <div class="col-auto d-flex align-items-center">
-                        <button type="button" class="btn btn-link btn-sm text-muted p-0" @click="resetFilters">Сброс</button>
-                    </div>
-                    <div class="col-auto ms-auto">
-                        <label class="form-label invisible">stats</label>
-                        <button type="button" class="btn btn-outline-secondary btn-sm" @click="openStats">Статистика</button>
-                    </div>
+
+
+
                 </form>
                 <div class="table-responsive mt-3">
                     <table class="table table-sm table-striped table-bordered align-middle text-center orders-table">

@@ -5,7 +5,7 @@
         <h5 class="fw-bold mb-4">Создание заказа</h5>
         <form @submit.prevent="submitOrder">
           <div class="mb-3">
-            <input v-model.trim="customer.fullName" type="text" class="form-control" placeholder="ФИО*" required />
+            <input v-model.trim="customer.full_name" type="text" class="form-control" placeholder="ФИО*" required />
           </div>
           <div class="mb-3">
             <input v-model.trim="customer.phone" type="tel" class="form-control" placeholder="Телефон*" required />
@@ -67,7 +67,7 @@
 import { reactive, ref, watch } from 'vue';
 
 const customer = reactive({
-  fullName: '',
+  full_name: '',
   phone: '',
   email: '',
   inn: '',
@@ -106,7 +106,7 @@ const onTitleBlur = (index) => {
 };
 
 const validate = () => {
-  if (!customer.fullName?.trim() || !customer.phone?.trim()) return 'Заполните ФИО и телефон';
+  if (!customer.full_name?.trim() || !customer.phone?.trim()) return 'Заполните ФИО и телефон';
   return '';
 };
 
@@ -118,9 +118,13 @@ const submitOrder = async () => {
 
   try {
     loading.value = true;
+    const normalizedItems = items
+      .filter(i => typeof i.title === 'string' && i.title.trim() !== '')
+      .map(({ title, quantity, unit }) => ({ title: String(title).trim(), quantity, unit }));
+
     const payload = {
       customer: { ...customer },
-      items: items.map(({ title, quantity, unit }) => ({ title, quantity, unit })),
+      items: normalizedItems,
     };
 
     const { data } = await window.axios.post('/api/orders', payload);

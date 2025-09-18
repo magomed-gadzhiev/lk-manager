@@ -29,18 +29,24 @@ final class GetOrdersHandler implements QueryHandler
             $builder->whereDate('created_at', '<=', $query->dateTo);
         }
 
-        if ($query->search) {
+        if ($query->search !== null) {
             $search = trim($query->search);
-            $builder->where(function (Builder $q) use ($search) {
-                $q->whereHas('customer', function (Builder $c) use ($search) {
-                    $c->where('full_name', 'like', "%{$search}%")
-                        ->orWhere('company_name', 'like', "%{$search}%")
-                        ->orWhere('phone', 'like', '%'.preg_replace('/\D+/', '', $search).'%');
-                })
-                ->orWhereHas('items', function (Builder $i) use ($search) {
-                    $i->where('title', 'like', "%{$search}%");
+            if ($search !== '') {
+                $searchLower = mb_strtolower($search, 'UTF-8');
+                $builder->where(function (Builder $q) use ($search, $searchLower) {
+                    $q->whereHas('customer', function (Builder $c) use ($search, $searchLower) {
+                        $digits = preg_replace('/\D+/', '', $search);
+                        $c->whereRaw('LOWER(full_name) LIKE ?', ['%'.$searchLower.'%'])
+                            ->orWhereRaw('LOWER(company_name) LIKE ?', ['%'.$searchLower.'%']);
+                        if ($digits !== '') {
+                            $c->orWhere('phone', 'like', '%'.$digits.'%');
+                        }
+                    })
+                    ->orWhereHas('items', function (Builder $i) use ($searchLower) {
+                        $i->whereRaw('LOWER(title) LIKE ?', ['%'.$searchLower.'%']);
+                    });
                 });
-            });
+            }
         }
 
         return $builder->get();

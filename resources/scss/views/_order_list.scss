@@ -11,39 +11,13 @@
     border: 0;
 }
 .orders-filters {
-    display: grid;
-    grid-template-columns: 1fr 170px 170px 170px 170px 140px 80px 140px;
-    gap: 16px 16px;
-    align-items: end;
     overflow-x: auto;
 }
 .orders-filters .form-control, .orders-filters .form-select {
-    height: 42px;
+    height: auto; /* используем размеры Bootstrap, в т.ч. sm */
 }
 .orders-filters .btn {
-    height: 42px;
-}
-.orders-filters .filters-item.label {
-    margin-bottom: 0;
-}
-.orders-filters .search {
-    grid-column: 1 / span 2;
-}
-.orders-filters .from {
-    grid-column: 3;
-}
-.orders-filters .to {
-    grid-column: 4;
-}
-.orders-filters .status {
-    grid-column: 5;
-}
-.orders-filters .apply {
-    grid-column: 6;
-}
-.orders-filters .reset {
-    grid-column: 7;
-    align-self: center;
+    height: auto; /* используем размеры Bootstrap, в т.ч. btn-sm */
 }
 .orders-filters .invisible {
     visibility: hidden;
@@ -51,17 +25,7 @@
     margin: 0;
     padding: 0;
 }
-.orders-filters .stats {
-    grid-column: 8;
-}
-@media (max-width: 1200px) {
-    .orders-filters {
-        grid-template-columns: 1fr 1fr;
-    }
-    .orders-filters .search {
-        grid-column: 1 / -1;
-    }
-}
+@media (max-width: 1200px) {}
 .orders-table {
     font-size: 0.8rem;
 }

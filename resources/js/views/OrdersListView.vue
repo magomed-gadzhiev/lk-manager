@@ -3,19 +3,19 @@
         <div class="card shadow-sm">
             <div class="card-body">
                 <h1 class="orders-title">Таблица заказов</h1>
-                <form class="orders-filters" @submit.prevent="loadOrders">
-                    <div class="filters-item search">
+                <form class="orders-filters row g-2 align-items-end" @submit.prevent="loadOrders">
+                    <div class="col">
                         <label class="form-label small text-muted">Поиск</label>
-                        <input v-model.trim="filters.search" type="text" class="form-control"
+                        <input v-model.trim="filters.search" type="text" class="form-control form-control-sm"
                                placeholder="ФИО, компания, телефон, товар"/>
                     </div>
-                    <div class="filters-item from">
+                    <div class="col-auto">
                         <label class="form-label small text-muted">С даты</label>
                         <div class="input-icon">
                             <input
                                 :value="formatDate(filters.dateFrom)"
                                 type="text"
-                                class="form-control"
+                                class="form-control form-control-sm"
                                 placeholder="дд.мм.гггг"
                                 readonly
                                 @click="openFromModal"
@@ -23,13 +23,13 @@
                             <span class="calendar-icon"></span>
                         </div>
                     </div>
-                    <div class="filters-item to">
+                    <div class="col-auto">
                         <label class="form-label small text-muted">По дату</label>
                         <div class="input-icon">
                             <input
                                 :value="formatDate(filters.dateTo)"
                                 type="text"
-                                class="form-control"
+                                class="form-control form-control-sm"
                                 placeholder="дд.мм.гггг"
                                 readonly
                                 @click="openToModal"
@@ -37,27 +37,25 @@
                             <span class="calendar-icon"></span>
                         </div>
                     </div>
-                    <div class="filters-item status">
+                    <div class="col-auto">
                         <label class="form-label small text-muted">Статус</label>
-                        <select v-model="filters.status" class="form-select">
+                        <select v-model="filters.status" class="form-select form-select-sm">
                             <option value="">Все</option>
                             <option value="new">Новые</option>
                             <option value="in_progress">В работе</option>
                             <option value="done">Завершённые</option>
                         </select>
                     </div>
-                    <div class="filters-item apply">
+                    <div class="col-auto">
                         <label class="form-label invisible">apply</label>
-                        <button type="submit" class="btn btn-outline-secondary w-100">Применить</button>
+                        <button type="submit" class="btn btn-outline-secondary btn-sm">Применить</button>
                     </div>
-                    <div class="filters-item reset">
-                        <label class="form-label invisible">reset</label>
-                        <button type="button" class="btn btn-link text-muted w-100 p-0" @click="resetFilters">Сброс
-                        </button>
+                    <div class="col-auto d-flex align-items-center">
+                        <button type="button" class="btn btn-link btn-sm text-muted p-0" @click="resetFilters">Сброс</button>
                     </div>
-                    <div class="filters-item stats">
+                    <div class="col-auto ms-auto">
                         <label class="form-label invisible">stats</label>
-                        <button type="button" class="btn btn-outline-secondary w-100" @click="openStats">Статистика</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" @click="openStats">Статистика</button>
                     </div>
                 </form>
                 <div class="table-responsive mt-3">
@@ -84,8 +82,8 @@
                             <td colspan="8" class="text-center py-4 text-muted">Нет данных</td>
                         </tr>
                         <tr v-for="order in orders" :key="order.id">
-                            <td>{{ formatDate(order.date) }}</td>
-                            <td>{{ order.customer?.fullName }}</td>
+                            <td>{{ formatDate(order.date || order.created_at) }}</td>
+                            <td>{{ order.customer?.fullName || order.customer?.full_name }}</td>
                             <td>{{ order.customer?.phone }}</td>
                             <td>{{ order.customer?.inn }}</td>
                             <td>{{ order.customer?.company_name || order.customer?.company }}</td>
@@ -308,8 +306,11 @@ const loadOrders = async () => {
         orders.value = Array.isArray(data?.data) ? data.data : (Array.isArray(data) ? data : []);
         computeStats(orders.value);
     } catch (e) {
-        orders.value = mockOrders;
-        computeStats(orders.value);
+        // Если 401 — редирект выполнит axios-интерцептор, моки не показываем
+        if (e?.response?.status !== 401 && e?.response?.status !== 403) {
+            orders.value = mockOrders;
+            computeStats(orders.value);
+        }
     } finally {
         loading.value = false;
     }

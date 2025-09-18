@@ -20,7 +20,8 @@ final class CommandBus implements CommandBusContract
     public function withMap(array $map): self
     {
         $clone = clone $this;
-        $clone->map = $map;
+        // Merge existing map with the provided map instead of overwriting
+        $clone->map = array_merge($this->map, $map);
         return $clone;
     }
 

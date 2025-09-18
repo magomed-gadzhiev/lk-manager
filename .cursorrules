@@ -4,6 +4,8 @@
 - если надо сделать что-то ещё, чтобы решить запрос, уточни
 - если есть несколько вариантов решения, уточни, какой выбрать
 - все изменения в схеме данных необходимо согласовывать
+
+- решение для test/dev environment
 - выполняй команды с помощью sail
 - перед проверками, пересобирай проект. Не используй флаг --no-cache
 - для проверки используй браузерный MCP
@@ -13,10 +15,17 @@
 - PHP 8.3
 - Laravel 11
 - MySQL
-- Vue.js (vue-tsc)
+- Vue.js
 - Bootstrap
 - Sass (scss)
+- DDD (Domain Driven Design) in Service Providers
+- CQRS (Command Query Responsibility Segregation), only synchronous commands
+- 2 command buses: by commands and by queries
 
+Domains and Service Providers, by DDD:
+- Auth
+- Customer
+- Order
 
 Цель:
 Цель: реализовать небольшой сервис на PHP 8.2+, Laravel 11, MySQL,

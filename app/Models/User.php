@@ -47,4 +47,11 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Guard name for Spatie roles/permissions middleware when using API guard.
+     *
+     * @var string
+     */
+    protected $guard_name = 'api';
 }

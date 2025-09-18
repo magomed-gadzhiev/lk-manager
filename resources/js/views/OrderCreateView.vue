@@ -17,7 +17,7 @@
             <input v-model.trim="customer.inn" type="text" class="form-control" placeholder="ИНН" />
           </div>
           <div class="mb-3">
-            <input v-model.trim="customer.company" type="text" class="form-control" placeholder="Название компании" />
+            <input v-model.trim="customer.company_name" type="text" class="form-control" placeholder="Название компании" />
           </div>
           <div class="mb-4">
             <input v-model.trim="customer.address" type="text" class="form-control" placeholder="Адрес" />
@@ -71,7 +71,7 @@ const customer = reactive({
   phone: '',
   email: '',
   inn: '',
-  company: '',
+  company_name: '',
   address: '',
 });
 

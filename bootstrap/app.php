@@ -12,7 +12,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        // Алиасы для ролей spatie/permission, чтобы использовать в api как middleware('role:...')
+//        $middleware->alias([
+//            'role' => 'Spatie\\Permission\\Middlewares\\RoleMiddleware',
+//            'permission' => 'Spatie\\Permission\\Middlewares\\PermissionMiddleware',
+//            'roles' => 'Spatie\\Permission\\Middlewares\\RoleMiddleware',
+//        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

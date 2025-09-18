@@ -88,7 +88,7 @@
                             <td>{{ order.customer?.fullName }}</td>
                             <td>{{ order.customer?.phone }}</td>
                             <td>{{ order.customer?.inn }}</td>
-                            <td>{{ order.customer?.company }}</td>
+                            <td>{{ order.customer?.company_name || order.customer?.company }}</td>
                             <td>{{ order.customer?.address }}</td>
                             <td>
                                 <div v-for="(item, idx) in order.items" :key="idx" class="product-line">{{ item.title }}

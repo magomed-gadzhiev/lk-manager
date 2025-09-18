@@ -46,8 +46,19 @@ const onSubmit = async () => {
 
     localStorage.setItem('auth_token', token);
     window.axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
-    await router.push({ name: 'home' });
+    try {
+      const roles = Array.isArray(data?.user?.roles) ? data.user.roles : [];
+      localStorage.setItem('auth_roles', JSON.stringify(roles));
+      if (roles.includes('manager')) {
+        await router.push({ name: 'orders.create' });
+      } else if (roles.includes('head')) {
+        await router.push({ name: 'orders.index' });
+      } else {
+        await router.push({ name: 'home' });
+      }
+    } catch {
+      await router.push({ name: 'home' });
+    }
   } catch (e) {
     if (e?.response?.status === 422) {
       error.value = e.response.data?.message || 'Неверные учетные данные';

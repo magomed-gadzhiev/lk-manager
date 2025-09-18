@@ -27,7 +27,6 @@ services:
     vite:
         image: node:20-alpine
         working_dir: /var/www/html
-        # (Optional) If host UID != 1000 consider building a custom image; for now remove explicit user to test.
         # user: "${WWWUSER:-1000}:${WWWGROUP:-1000}"
         command: sh -lc "npm ci && npm run dev -- --host 0.0.0.0 --port ${VITE_PORT:-5173}"
         ports:

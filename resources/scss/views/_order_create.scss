@@ -1,0 +1,39 @@
+.order-create-page {
+  background-color: #f6f7f9;
+
+  .card {
+    border: 0;
+    border-radius: 10px;
+  }
+
+  .form-control, .form-select {
+    height: 42px;
+    border-color: #e9edf2;
+    background-color: #fff;
+  }
+
+  .form-control:focus, .form-select:focus {
+    box-shadow: none;
+    border-color: #d9dee5;
+  }
+
+  .section {
+    border-color: #eef1f5;
+  }
+
+  .products-header {
+    color: #6c757d;
+  }
+
+  .qty-input {
+    max-width: 72px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .unit-select {
+    min-width: 140px;
+  }
+}
+
+

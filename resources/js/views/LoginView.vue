@@ -5,12 +5,16 @@
         <h5 class="text-center fw-bold mb-4 login-title">Авторизация</h5>
         <form @submit.prevent="onSubmit">
           <div class="mb-3">
-            <input v-model="form.login" type="text" class="form-control" placeholder="Логин" />
+            <input v-model="form.email" type="email" class="form-control" placeholder="Email" />
           </div>
           <div class="mb-3">
             <input v-model="form.password" type="password" class="form-control" placeholder="Пароль" />
           </div>
-          <button class="btn w-100 login-btn" type="submit">Войти</button>
+          <div v-if="error" class="alert alert-danger py-2" role="alert">{{ error }}</div>
+          <button class="btn w-100 login-btn" type="submit" :disabled="loading">
+            <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            Войти
+          </button>
         </form>
       </div>
     </div>
@@ -18,12 +22,40 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-const form = reactive({ login: '', password: '' });
+const router = useRouter();
+const form = reactive({ email: '', password: '' });
+const loading = ref(false);
+const error = ref('');
 
-const onSubmit = () => {
-  // Temporary submit handler
-  alert(`Логин: ${form.login}\nПароль: ${form.password}`);
+const onSubmit = async () => {
+  error.value = '';
+  loading.value = true;
+  try {
+    const { data } = await window.axios.post('/api/login', {
+      email: form.email,
+      password: form.password,
+    });
+
+    const token = data?.token;
+    if (!token) {
+      throw new Error('Токен не получен');
+    }
+
+    localStorage.setItem('auth_token', token);
+    window.axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+    await router.push({ name: 'home' });
+  } catch (e) {
+    if (e?.response?.status === 422) {
+      error.value = e.response.data?.message || 'Неверные учетные данные';
+    } else {
+      error.value = 'Ошибка входа. Попробуйте позже.';
+    }
+  } finally {
+    loading.value = false;
+  }
 };
 </script>

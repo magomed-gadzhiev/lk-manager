@@ -50,7 +50,7 @@ class AuthController extends Controller
     {
         $token = $request->user()->token();
         if ($token) {
-            $commands->dispatch(new RevokeAccessTokenCommand($token->id));
+            $commands->dispatch(new RevokeAccessTokenCommand((string) $token->id));
         }
 
         return response()->json(['message' => 'Logged out']);

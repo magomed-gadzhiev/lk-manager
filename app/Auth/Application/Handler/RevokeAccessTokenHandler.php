@@ -4,6 +4,8 @@ namespace App\Auth\Application\Handler;
 
 use App\Application\CQRS\Contracts\CommandHandler;
 use App\Auth\Application\Command\RevokeAccessTokenCommand;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Passport\Token;
 
 final class RevokeAccessTokenHandler implements CommandHandler
 {
@@ -11,8 +13,12 @@ final class RevokeAccessTokenHandler implements CommandHandler
     {
         assert($command instanceof RevokeAccessTokenCommand);
 
-        $token = auth()->user()?->token();
-        if ($token && $token->id === $command->tokenId) {
+        /** @var Token|null $token */
+        $token = Token::query()->find($command->tokenId);
+
+        $currentUserId = Auth::guard('api')->id() ?? Auth::id();
+
+        if ($token && $currentUserId !== null && (int) $currentUserId === (int) $token->user_id) {
             $token->revoke();
         }
 

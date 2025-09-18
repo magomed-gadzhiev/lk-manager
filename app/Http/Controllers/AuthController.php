@@ -2,48 +2,55 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Application\CQRS\Contracts\CommandBus;
+use App\Application\CQRS\Contracts\QueryBus;
+use App\Auth\Application\Command\IssueAccessTokenCommand;
+use App\Auth\Application\Command\RevokeAccessTokenCommand;
+use App\Auth\Application\DTO\AuthResult;
+use App\Auth\Application\DTO\AuthUser;
+use App\Auth\Application\Query\GetUserRolesQuery;
+use App\Auth\Application\Query\VerifyCredentialsQuery;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    public function login(Request $request, QueryBus $queries, CommandBus $commands)
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
         ]);
 
-        $user = User::where('email', $credentials['email'])->first();
+        $user = $queries->ask(new VerifyCredentialsQuery($credentials['email'], $credentials['password']));
+        $roles = $queries->ask(new GetUserRolesQuery($user->id));
+        $token = $commands->dispatch(new IssueAccessTokenCommand($user->id, 'api'));
 
-        if (! $user || ! Hash::check($credentials['password'], $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['Неверные учетные данные.'],
-            ]);
-        }
-
-        // Создаем персональный токен
-        $token = $user->createToken('api')->accessToken;
+        $dto = new AuthResult(
+            token: $token,
+            user: new AuthUser(
+                id: $user->id,
+                name: $user->name,
+                email: $user->email,
+                roles: $roles,
+            )
+        );
 
         return response()->json([
-            'token' => $token,
+            'token' => $dto->token,
             'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'roles' => $user->getRoleNames(),
+                'id' => $dto->user->id,
+                'name' => $dto->user->name,
+                'email' => $dto->user->email,
+                'roles' => $dto->user->roles,
             ],
         ]);
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request, CommandBus $commands)
     {
         $token = $request->user()->token();
         if ($token) {
-            $token->revoke();
+            $commands->dispatch(new RevokeAccessTokenCommand($token->id));
         }
 
         return response()->json(['message' => 'Logged out']);

@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Database\Seeders\CustomerSeeder;
+use Database\Seeders\OrderSeeder;
+use Database\Seeders\PassportSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -37,5 +40,12 @@ class DatabaseSeeder extends Seeder
             ]
         );
         $manager->assignRole($managerRole);
+
+        // Данные домена
+        $this->call([
+            PassportSeeder::class,
+            CustomerSeeder::class,
+            OrderSeeder::class,
+        ]);
     }
 }

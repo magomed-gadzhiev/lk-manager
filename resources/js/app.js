@@ -19,11 +19,8 @@ router.beforeEach((to, from, next) => {
         return next({ name: 'login' });
     }
 
-    if (to.name === 'login' && token) {
-        if (roles.includes('manager')) return next({ name: 'orders.create' });
-        if (roles.includes('head')) return next({ name: 'orders.index' });
-        return next({ name: 'home' });
-    }
+    // Разрешаем открывать страницу логина даже при наличии токена;
+    // редирект выполняется только после успешной авторизации в самой форме.
 
     if (to.name === 'orders.create' && !roles.includes('manager')) {
         return next({ name: 'orders.index' });

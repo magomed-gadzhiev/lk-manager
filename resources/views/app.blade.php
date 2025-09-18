@@ -7,23 +7,7 @@
     <!-- Bootstrap 5 CSS via CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-    <?php
-        $manifestPath = public_path('build/manifest.json');
-        $isLocal = app()->environment('local');
-    ?>
-
-    @if (file_exists($manifestPath))
-        {{-- Production (built) or local with build present --}}
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @elseif ($isLocal)
-        {{-- Local fallback to Vite dev server to avoid Vite manifest exception when not built --}}
-        <script type="module" src="http://localhost:5173/@@vite/client"></script>
-        <link rel="stylesheet" href="http://localhost:5173/resources/css/app.css" />
-        <script type="module" src="http://localhost:5173/resources/js/app.js"></script>
-    @else
-        {{-- In non-local env, require built assets to be present --}}
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @endif
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
 <div id="app"></div>
